@@ -29,4 +29,4 @@ def sieve(start,size,factors):
 
 #example: find all power-smooth integers in the interval [2^40,2^40+2^20)
 fac16=smoothPrimes(2^16);
-sieve40=sieve(2^40,2^20,fac16);
+list40=sieve(2^40,2^20,fac16);
