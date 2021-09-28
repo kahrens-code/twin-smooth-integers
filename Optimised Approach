@@ -1,7 +1,6 @@
 #Optimised appraoch to find twin smooth primes using a single PTE solution
 
 
-
 #find those residue classes [r] such that a(r+k*C)/C and b(r+k*C)/C are integers
 
 #polyA is one of the two polynomials corresponding to the PTE solution
@@ -30,7 +29,6 @@ def findResidues(polyA,modC):
                     resList[mult1*numCurrent*j+mult1*k+l].append(primeRes[i][k])
     residues=[CRT(resList[i],primePowers) for i in range(numComb)]  #finally use the CRT to get the relevant residues mod modC
     return(sorted(residues))                                        #and order them by "<"
-
 
 
 #check if representatives are power-smooth
