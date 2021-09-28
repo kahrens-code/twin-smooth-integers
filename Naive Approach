@@ -1,4 +1,4 @@
-#search for twin smooth integers
+#naive approach to find twin smooth integers
 
 #smoothList is a list of tupels (integer,smoothness) where smoothness is "1" if integer is smooth and "0" otherwise
 #roots is a list of all elements in the PTE solution or equivalentely all zeros of both of the corresponding polynomials
