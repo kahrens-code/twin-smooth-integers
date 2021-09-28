@@ -1,4 +1,8 @@
 #find the set of primes smaller than the bound and the maximal exponent for powersmoothness for each prime
+
+#smoothBound is the smoothness bound
+#the output is a list of tupels (prime factor,maximal exponent)
+
 def smoothPrimes(smoothBound): 
     array=[];
     for p in range(smoothBound):
@@ -8,9 +12,12 @@ def smoothPrimes(smoothBound):
             array.append((p,maxExponent));
     return(array)
 
+
 #sieve for "smooth" integers in the interval [start,start+size)
+
 #the "smoothness" is given by the list "factors" of tupes (prime factor,maximal exponent) and thus can be smooth, power-smooth or arbitrary
 #the output is a list of tuples (integer,smoothness) where smoothness is "1" if the integer is "smooth" and "0" otherwise
+
 def sieve(start,size,factors):  
     array=[[start+i,1] for i in range(size)];
     for f in factors:
@@ -27,6 +34,6 @@ def sieve(start,size,factors):
         else: a[1]=0;  
     return array
 
-#example: find all power-smooth integers in the interval [2^40,2^40+2^20)
+#example: find all 2^16-power-smooth integers in the interval [2^40,2^40+2^20)
 fac16=smoothPrimes(2^16);
 list40=sieve(2^40,2^20,fac16);
