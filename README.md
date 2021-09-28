@@ -1,7 +1,7 @@
 # Twin Smooth Integers
 
 Sieving for large twin smooth integers using single solutions to the Prouhet-Tarry-Escott (PTE) problem.
-Optimized for single solutions by doing the modulo calculus first.
+Optimized for single solutions by doing the modulo calculus first. Implemented in Sage.
 
 The Sieve of Eratosthenes marks all integers in an interval as smooth (1) or non-smooth (0).
 The Naive Approach gives a list of integers l producing twin smooth integers a(l)/C,b(l)/C by checking every smooth integer in the interval.
