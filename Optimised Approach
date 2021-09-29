@@ -15,7 +15,7 @@ def findResidues(polyA,modC):
         partialRes=[];                                              #make a list of relvant residue classes mod q
         for i in range(q):                                          #where q=p^e is the maximal power of that prime dividing modC
             if ZZ(polyA(i))%q==0: partialRes.append(i)
-        primeRes.append(partialRes)                                 #and add it to the list of lists
+        primeRes.append(partialRes)                                 #and add it to a list of lists
     numComb=prod(len(primeRes[i]) for i in range(numFac))           #find the number of all possible combinations with one entry of
     resList=[[] for i in range(numComb)]                            #each sublist and prepare a list to write them down
     mult1=numComb; mult2=1; numCurrent=1;                           #make sure every combination is created
