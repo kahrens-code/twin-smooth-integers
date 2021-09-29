@@ -33,7 +33,3 @@ def sieve(start,size,factors):
             a[1]=1;  
         else: a[1]=0;  
     return array
-
-#example: mark all integers in the interval [2^40,2^40+2^20) as 2^16-power-smooth (1) or not-2^16-power-smooth (0)
-fac16=smoothPrimes(2^16);
-list40=sieve(2^40,2^20,fac16);
