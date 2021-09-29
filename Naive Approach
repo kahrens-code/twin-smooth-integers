@@ -8,7 +8,7 @@
 
 def checkAll(smoothList,roots,polyA,diffC): 
     values=[];
-    for i in range(max(roots),len(smoothList)):             #to prevent i-roots[r]<0 start at max(roots)
+    for i in range(max(roots),len(smoothList)):             #prevent i-roots[r]<0
         if smoothList[i][1]==1:                             #check if smoothList[i][0] is smooth
             for r in range(1,len(roots)):                   #roots[0] is 0 (already checked)
                 if smoothList[i-roots[r]][1]==0: break;     #check if all factors of polyA(smoothList[i][1]) are smooth
