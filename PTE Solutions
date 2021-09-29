@@ -28,8 +28,8 @@ a7(x)=(x-1)*(x-11)*(x-30)*(x-39)*(x-68)*(x-70)*(x-84);
 b7(x)=x*(x-18)*(x-19)*(x-50)*(x-56)*(x-79)*(x-81);
 C7=5145940800;
 roots7=[0,1,11,18,19,30,39,50,56,68,70,79,81,84];
-#WARNING: Number of relevant residues is 101879232 and file size is roughly 850MB.
-#Can cause crashes in Sage, when saving as one large file.
+#WARNING: Number of relevant residue classes is 101879232 and file size is roughly 850MB.
+#Can cause crashes in Sage, when saving all relevant residue classes in one large file.
 
 #n=8
 
@@ -37,5 +37,5 @@ a8(x)=(x-1)*(x-2)*(x-11)*(x-20)*(x-30)*(x-39)*(x-48)*(x-49);
 b8(x)=x*(x-4)*(x-9)*(x-23)*(x-27)*(x-41)*(x-46)*(x-50);
 C8=1210809600;
 roots8=[0,1,2,4,9,11,20,23,27,30,39,41,46,48,49,50];
-#WARNING: Number of relevant residues is 76873728 and file size is roughly 600MB.
-#Can cause crashes in Sage, when saving as one large file.
+#WARNING: Number of relevant residue classes is 76873728 and file size is roughly 600MB.
+#Can cause crashes in Sage, when saving all relevant residue classes in one large file.
