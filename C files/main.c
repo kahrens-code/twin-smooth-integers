@@ -8,7 +8,7 @@
 #include"naive.h"
 #include"new.h"
 
-#define TIMES	//print running times to screen
+#define COMPARE	//compare different approaches and print running times to screen
 
 ///////////////////////////////////// work in progress ////////////////////////////////////////
 
@@ -17,7 +17,8 @@ int main() {
 //general parameters
 	unsigned short maxNumberResults = 100;		//fix the size for the arry of results
 	unsigned int size = pow(2, 20);				//size of chunks
-	unsigned short truncation = 1;				//number of small primes to be omitted in the log sieve
+	unsigned short truncPrime = 1;				//number of small primes to be omitted in the primeTruncLogSieve
+	unsigned short truncPower = 10;				//power of 2 up to which prime powers are omitted in the powerTruncLogSieve
 	unsigned long start = pow(2, 42);			//start of search interval I
 	unsigned int totalSize = 1;		//size of the whole search interval
 	unsigned long end = start + totalSize;		//end of search interval I
@@ -55,15 +56,17 @@ int main() {
 	unsigned int numberSmoothPrimes;	//number of primes below the smoothness bound
 	unsigned int *smoothPrimes;			//pointer to array of such primes
 	unsigned short *maxExponents;		//highest power of each prime to be included in the search
+	unsigned short *minExponents;			//smallest power of each prime above 2^truncPower
 	unsigned long *logTable;			//array with thresholds for rounded logarithms
 	unsigned short *logSmoothPrimes;	//rounded logarithms of smooth primes
-	unsigned short tolerance;			//size of allowed non-smooth factor (2^tolerance)
-	unsigned short tolerance0;			//size of allowed non-smooth factor (2^tolerance)
-	unsigned short tolerance2;			//size of allowed non-smooth factor (2^tolerance)
-	unsigned short *minExponents;
-	unsigned int surplusSmooth;			//approximate number of additional smooth integers per chunk when using logSieve
+	unsigned short tolerance;			//size of allowed non-smooth factor (2^tolerance) for prime truncated log sieve
+	unsigned int surplusSmooth;			//approximate number of additional smooth integers per chunk when using primeTruncLogSieve
+	#ifdef COMPARE
+	unsigned short tolerance0;			//size of allowed non-smooth factor (2^tolerance) for not truncated log sieve
+	unsigned short tolerancePower;			//size of allowed non-smooth factor (2^tolerance) for power truncated log sieve
 	unsigned int surplusSmooth0;			//approximate number of additional smooth integers per chunk when using logSieve
-	unsigned int surplusSmooth2;			//approximate number of additional smooth integers per chunk when using logSieve
+	unsigned int surplusSmoothPower;			//approximate number of additional smooth integers per chunk when using powerTruncLogSieve
+	#endif
 	unsigned long *smoothInterval;		//auxiliary array for regular sieve
 	unsigned short *smoothNumbers;		//array of 1s and 0s for smooth and non-smooth integers, respectively
 	unsigned int numberResidues;		//number |R| of residue classes r mod C s.t. a(r)/C and b(r)/C are integers
@@ -85,22 +88,24 @@ int main() {
 	time_t initialNewLong, finalNewLong;
 
 //pre-computation
-	preSmoothness(smoothnessBound, &numberSmoothPrimes, &smoothPrimes, maxSizePrimePower, &maxExponents, numberRoots, roots, &maxRoot, &logTable, &logSmoothPrimes, start, size, &smoothInterval, &smoothNumbers, maxNumberResults, &smoothIntsModC, truncation, &tolerance, &surplusSmooth);
+	preSmoothness(smoothnessBound, &numberSmoothPrimes, &smoothPrimes, maxSizePrimePower, &maxExponents, numberRoots, roots, &maxRoot, &logTable, &logSmoothPrimes, start, size, &smoothInterval, &smoothNumbers, maxNumberResults, &smoothIntsModC, truncPrime, truncPower, &minExponents, &tolerance, &surplusSmooth);
+	#ifdef COMPARE
 	findTolerance (numberSmoothPrimes, smoothPrimes, maxExponents, logTable, logSmoothPrimes, start, size, smoothInterval, smoothNumbers, smoothIntsModC, 0, &tolerance0, &surplusSmooth0);
-	findTolerance (numberSmoothPrimes, smoothPrimes, maxExponents, logTable, logSmoothPrimes, start, size, smoothInterval, smoothNumbers, smoothIntsModC, 1, &tolerance2, &surplusSmooth2);
+	findPowerTolerance (numberSmoothPrimes, smoothPrimes, maxExponents, logTable, logSmoothPrimes, start, size, smoothInterval, smoothNumbers, smoothIntsModC, minExponents, &tolerancePower, &surplusSmoothPower);
+	#endif
 //pre-computation for new approach
 	initialPre = clock();
 	findResidues(numberSmoothPrimes, smoothPrimes, degree, polyA, C, &numberResidues, &residues);
 	relevantSteps = findRelevantSteps(numberResidues, residues, size, C);
 	finalPre = clock();
 	////////////////////////////////////////// testing /////////////////////////////////////////////////////////////
-	minExponents = (unsigned short *) malloc(numberSmoothPrimes * sizeof(short));
+/*	minExponents = (unsigned short *) malloc(numberSmoothPrimes * sizeof(short));
 	for (unsigned int i=0; i<numberSmoothPrimes; i++) {
 		minExponents[i] = 1;
-	}
+	}*/
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	#ifdef TIMES
-	//single chunk sieve for smoothness
+	#ifdef COMPARE
+	//single chunk regular sieve for smoothness
 		initialSieve = clock();
 		currentStart = start - maxRoot;
 		findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, currentStart, size, smoothInterval, smoothNumbers);
@@ -108,21 +113,19 @@ int main() {
 	//single chunk log sieve for smoothness
 		initialLogSieve =clock();
 		currentStart = start - maxRoot;
-		findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, 0, tolerance0);
+		findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, 0, tolerance0);
 		finalLogSieve = clock();
-	//single chunk truncated log sieve for smoothness
+	//single chunk prime truncated log sieve for smoothness
 		initialTruncLogSieve = clock();
 		currentStart = start - maxRoot;
-		findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncation, tolerance);
+		findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncPrime, tolerance);
 		finalTruncLogSieve = clock();
-	////////////////////////////// testing ///////////////////////
 	//single chunk truncated log sieve2 for smoothness
 		initialTruncLogSieve2 = clock();
 		currentStart = start - maxRoot;
-		findTruncLogSmoothNumbers2(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, minExponents, tolerance2);
+		findPowerTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, minExponents, tolerance0);
 		finalTruncLogSieve2 = clock();
-	///////////////////////////////////////////////////////////////
-	
+
 	//naive approach single chunk
 		initialNaive = clock();
 		numberSmoothIntsModC = 0;
@@ -147,7 +150,7 @@ free(minExponents);
  	currentStart = start - maxRoot;
 	while (currentStart < end) {
 		//findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, currentStart, size, smoothInterval, smoothNumbers); 
-		findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncation, tolerance);
+		findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncPrime, tolerance);
 		findSmoothIntsModC(currentStart, size, smoothNumbers, numberRoots, roots, maxRoot, degree, polyA, C, &numberSmoothIntsModC, smoothIntsModC, maxNumberResults);
 		currentStart += size - maxRoot;
 	}
@@ -160,14 +163,14 @@ free(minExponents);
 	if (C >= size) {
 		while (currentStart < end) {
 			//findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, currentStart, size, smoothInterval, smoothNumbers);
-			findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncation, tolerance);
+			findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncPrime, tolerance);
 			checkMOD(smoothNumbers, numberResidues, residues, currentStart, size, numberRoots, roots, maxRoot, C, relevantSteps, &numberSmoothIntsModC, smoothIntsModC, maxNumberResults);
 			currentStart += size - maxRoot;
 		}
 	}else{
 		while (currentStart < end) {
 			//findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, currentStart, size, smoothInterval, smoothNumbers);
-			findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncation, tolerance);
+			findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, currentStart, size, smoothNumbers, truncPrime, tolerance);
 			checkMod (smoothNumbers, numberResidues, residues, start, size, numberRoots, roots, maxRoot, C, &numberSmoothIntsModC, smoothIntsModC, maxNumberResults);
 			currentStart += size - maxRoot;
 		}
@@ -175,7 +178,7 @@ free(minExponents);
 	finalNewLong = time(NULL);
 
 //print results on the screen
-	#ifdef TIMES
+	#ifdef COMPARE
 		printf("running times:\n");
 		printf("pre-computation (new): %f s\n", (double)(finalPre-initialPre)/CLOCKS_PER_SEC);
 		printf("single Sieve: %.3f ms\n", (double)(finalSieve-initialSieve)/CLOCKS_PER_SEC*1000);
@@ -190,6 +193,10 @@ free(minExponents);
 	printf("logSieve:\n");
 	printf("tolerance to include all smooth integers: %u\n", tolerance);
 	printf("roughly %u more smooth integers per chunk\n", surplusSmooth);
+	#ifdef COMPARE
+	printf("not truncated log sieve: tolerance: %u, surplus: %u\n", tolerance0, surplusSmooth0);
+	printf("power truncated log siev: tolerance: %u, surplus: %u\n", tolerancePower, surplusSmoothPower);
+	#endif
 	printf("parameters:\n");
 	printf("sBound: %.2f, start: %.2f, end: %.2f, size: %.2f\n", log2(smoothnessBound), log2(start), log2(end), log2(size));
 	printf("degree: %u, C: %u\n", degree, C);
@@ -214,10 +221,11 @@ free(minExponents);
 	}
 
 //free allocated memory
-	free(smoothInterval);
 	free(smoothPrimes);
 	free(logSmoothPrimes);
 	free(maxExponents);
+	free(minExponents);
+	free(smoothInterval);
 	free(smoothNumbers);
 	free(residues);
 	free(smoothIntsModC);
