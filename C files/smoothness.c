@@ -36,7 +36,7 @@ void findSmoothPrimes (unsigned int smoothnessBound, unsigned int *numberSmoothP
 	free(allNumbers);
 }
 
-//find highest power for each prime to be in cluded in the sieving for smooth integers
+//find highest power for each prime to be included in the sieving for smooth integers
 //define kind of smoothness
 //powersmooth: maxSizePrimePower = smoothnessBound (restrictive)
 //smooth: maxSizePrimePower = end (inefficient)
@@ -63,17 +63,59 @@ void findMaxExponents (unsigned long maxSizePrimePower, unsigned int numberSmoot
 	}
 }
 
+//find powers for each prime to be in cluded in the sieving for smooth integers
+//define kind of smoothness
+//powersmooth: maxSizePrimePower = smoothnessBound (restrictive)
+//smooth: maxSizePrimePower = end (inefficient)
+//compromise: e.g. maxSizePrimePower = size (for small smoothness bounds)
+void findExponents (unsigned long maxSizePrimePower, unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short truncPower, unsigned short **maxExponents, unsigned short **minExponents) {
+
+	unsigned int i;
+	unsigned short j;
+	unsigned long q;
+	unsigned long threshold;
+	*maxExponents = (unsigned short *) calloc(numberSmoothPrimes, sizeof(short));
+	*minExponents = (unsigned short *) calloc(numberSmoothPrimes, sizeof(short));
+	if (*maxExponents == NULL || *minExponents == NULL) {
+		printf("Error: max/min Exponents could not be allocated\n");
+		exit(-1);
+	}
+
+	threshold = pow(2, truncPower);
+	for (i=0; i<numberSmoothPrimes; i++) {		//find e with theshold <= p^e < maxSizePrimePower
+		j = 1;
+		q = smoothPrimes[i];
+		while (q < threshold) {
+			j++;
+			q *= smoothPrimes[i];
+		}
+		(*minExponents)[i] = j;
+		q *= smoothPrimes[i];
+		while (q < maxSizePrimePower) {
+			j++;
+			q *= smoothPrimes[i];
+		}
+		(*maxExponents)[i] = j;
+	}
+}
+
 //calculate the rounded logarithm of all primes below the smoothness bound
-void findLogSmoothPrimes (unsigned long *logTable, unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *logSmoothPrimes) {
+void findLogSmoothPrimes (unsigned long *logTable, unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short **logSmoothPrimes) {
 
 	unsigned int i;
 	unsigned short l = 0;
+
+	*logSmoothPrimes = (unsigned short *) malloc(numberSmoothPrimes * sizeof(short));
+	if (*logSmoothPrimes == NULL) {
+		printf("Error: logSmoothPrimes could not be allocated\n");
+		exit(-1);
+	}
 
 	for (i=0; i<numberSmoothPrimes; i++) {
 		while (smoothPrimes[i] > logTable[l]) {
 			l++;		//smoothness bound << 2^64, so l<64
 		}
-		logSmoothPrimes[i] = l;
+		(*logSmoothPrimes)[i] = l;
 	}
 }
 
@@ -98,7 +140,7 @@ void findSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPri
 		q = 1;
 		for (e=1; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);
+			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			if (step == q) {
 				step = 0;
 			}
@@ -120,7 +162,7 @@ void findSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPri
 //truncated log sieve
 //CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
 //CAUTION: just returns an array of 0s and 1s, start value is NOT included
-void findTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned long *logTable, unsigned long start, unsigned int size, unsigned short *smoothNumbers, unsigned short truncation, unsigned short tolerance) {
+void findPrimeTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned long *logTable, unsigned long start, unsigned int size, unsigned short *smoothNumbers, unsigned short truncPrime, unsigned short tolerance) {
 
 	unsigned int i;
 	unsigned int e;
@@ -128,17 +170,17 @@ void findTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *s
 	unsigned int step;
 
 	if (start + size < start) {
-		printf("Error: interval exceeds 64Bit values (findTruncLogSmoothNumbers)\n");
+		printf("Error: interval exceeds 64Bit values (findPrimeTruncLogSmoothNumbers)\n");
 		exit(-1);
 	}
 	for (i=0; i<size; i++) {
 		smoothNumbers[i] = 0;
 	}
-	for (i=truncation; i<numberSmoothPrimes; i++) {		//use a sieve to find smooth elements
+	for (i=truncPrime; i<numberSmoothPrimes; i++) {		//use a sieve to find smooth elements
 		q = 1;
 		for (e=1; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);
+			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			if (step == q) {
 				step = 0;
 			}
@@ -173,10 +215,10 @@ void findTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *s
 	}
 }
 
-//truncated log sieve 2
+//power truncated log sieve
 //CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
 //CAUTION: just returns an array of 0s and 1s, start value is NOT included
-void findTruncLogSmoothNumbers2 (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned long *logTable, unsigned long start, unsigned int size, unsigned short *smoothNumbers, unsigned short *minExponents, unsigned short tolerance) {
+void findPowerTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned long *logTable, unsigned long start, unsigned int size, unsigned short *smoothNumbers, unsigned short *minExponents, unsigned short tolerance) {
 
 	unsigned int i;
 	unsigned int e;
@@ -184,17 +226,17 @@ void findTruncLogSmoothNumbers2 (unsigned int numberSmoothPrimes, unsigned int *
 	unsigned int step;
 
 	if (start + size < start) {
-		printf("Error: interval exceeds 64Bit values (findTruncLogSmoothNumbers2)\n");
+		printf("Error: interval exceeds 64Bit values (findPowerTruncLogSmoothNumbers)\n");
 		exit(-1);
 	}
 	for (i=0; i<size; i++) {
 		smoothNumbers[i] = 0;
 	}
-	for (i=1; i<numberSmoothPrimes; i++) {		//use a sieve to find smooth elements
+	for (i=0; i<numberSmoothPrimes; i++) {		//use a sieve to find smooth elements
 		q = 1;
 		for (e=minExponents[i]; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);
+			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 			if (step == q) {
 				step = 0;
 			}
@@ -229,8 +271,8 @@ void findTruncLogSmoothNumbers2 (unsigned int numberSmoothPrimes, unsigned int *
 	}
 }
 
-//find tolerance s.t. the truncated logarithmic sieving does not exclude any smooth integers
-void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned long *smoothIntsModC, unsigned short truncation, unsigned short *tolerance, unsigned int *surplusSmooth) {
+//find tolerance s.t. the prime truncated logarithmic sieving does not exclude any smooth integers
+void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned long *smoothIntsModC, unsigned short truncPrime, unsigned short *tolerance, unsigned int *surplusSmooth) {
 	
 	unsigned int i = 0;
 	unsigned short *compareSmoothNumbers = (unsigned short *) malloc(size * sizeof(short));
@@ -241,17 +283,52 @@ void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes,
 	*tolerance = 0;
 	*surplusSmooth = 0;
 	findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, start, size, smoothInterval, smoothNumbers);
-	findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncation, *tolerance);
+	findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncPrime, *tolerance);
 	while (i < size) {
 		if (compareSmoothNumbers[i] < smoothNumbers[i]) {
 			(*tolerance)++;
-			findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncation, *tolerance);
+			findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncPrime, *tolerance);
 		}else{
 			i++;
 		}
 	}
 	(*tolerance)++;
-	findTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncation, *tolerance);
+	findPrimeTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, truncPrime, *tolerance);
+	
+	for (i=0; i<size; i++) {
+		if (compareSmoothNumbers[i] < smoothNumbers[i]) {
+			printf("logSieve misses smooth value: %lu\n", start+i);
+		}
+		if (compareSmoothNumbers[i] > smoothNumbers[i]) {
+			(*surplusSmooth)++;
+		}
+	}
+	free(compareSmoothNumbers);
+}
+
+//find tolerance s.t. the power truncated logarithmic sieving does not exclude any smooth integers
+void findPowerTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned long *smoothIntsModC, unsigned short *minExponents, unsigned short *tolerance, unsigned int *surplusSmooth) {
+	
+	unsigned int i = 0;
+	unsigned short *compareSmoothNumbers = (unsigned short *) malloc(size * sizeof(short));
+	if (compareSmoothNumbers == NULL) {
+		printf("Error: memory for preSmoothness could not be allocated\n");
+		exit(-1);
+	}
+	*tolerance = 0;
+	*surplusSmooth = 0;
+	findSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, start, size, smoothInterval, smoothNumbers);
+	findPowerTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, minExponents, *tolerance);
+	while (i < size) {
+		if (compareSmoothNumbers[i] < smoothNumbers[i]) {
+			(*tolerance)++;
+			findPowerTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, minExponents, *tolerance);
+		}else{
+			i++;
+		}
+	}
+	(*tolerance)++;
+	findPowerTruncLogSmoothNumbers(numberSmoothPrimes, smoothPrimes, maxExponents, logSmoothPrimes, logTable, start, size, compareSmoothNumbers, minExponents, *tolerance);
 	
 	for (i=0; i<size; i++) {
 		if (compareSmoothNumbers[i] < smoothNumbers[i]) {
@@ -265,34 +342,34 @@ void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes,
 }
 
 //pre-computation for smoothness sieving
-void preSmoothness (unsigned int smoothnessBound, unsigned int *numberSmoothPrimes, unsigned int **smoothPrimes, unsigned long maxSizePrimePower, unsigned short **maxExponents, unsigned short numberRoots, short *roots, unsigned short *maxRoot, unsigned long **logTable, unsigned short **logSmoothPrimes, unsigned long start, unsigned int size, unsigned long **smoothInterval, unsigned short **smoothNumbers, unsigned short maxNumberResults, unsigned long **smoothIntsModC, unsigned short truncation, unsigned short *tolerance, unsigned int *surplusSmooth) {
+void preSmoothness (unsigned int smoothnessBound, unsigned int *numberSmoothPrimes, unsigned int **smoothPrimes, unsigned long maxSizePrimePower, unsigned short **maxExponents, unsigned short numberRoots, short *roots, unsigned short *maxRoot, unsigned long **logTable, unsigned short **logSmoothPrimes, unsigned long start, unsigned int size, unsigned long **smoothInterval, unsigned short **smoothNumbers, unsigned short maxNumberResults, unsigned long **smoothIntsModC, unsigned short truncPrime, unsigned short truncPower, unsigned short **minExponents, unsigned short *tolerance, unsigned int *surplusSmooth) {
 	
 	unsigned int i;
-	
-	findSmoothPrimes(smoothnessBound, numberSmoothPrimes, smoothPrimes);
-	findMaxExponents(maxSizePrimePower, *numberSmoothPrimes, *smoothPrimes, maxExponents);
-	
+	static unsigned long logTable64[64];
+	*smoothInterval = (unsigned long *) malloc(size * sizeof(long));
+	*smoothNumbers = (unsigned short *) malloc(size * sizeof(short));
+	*smoothIntsModC = (unsigned long *) calloc(maxNumberResults, sizeof(long));
+	if (*smoothInterval == NULL || *smoothNumbers == NULL || *smoothIntsModC == NULL) {
+		printf("Error: memory for preSmoothness could not be allocated\n");
+		exit(-1);
+	}
+
+	for (i=0; i<64; i++) {
+		logTable64[i] = floor(pow(2, i + 0.5));
+	}
+	*logTable = logTable64;
 	*maxRoot = 0;
 	for (i=1; i<numberRoots; i++) {
 		if (roots[i] > *maxRoot) {
 			*maxRoot = roots[i];
 		}
 	}
-	static unsigned long logTable64[64];
-	for (i=0; i<64; i++) {
-		logTable64[i] = floor(pow(2, i + 0.5));
-	}
-	*logTable = logTable64;
-	*logSmoothPrimes = (unsigned short *) malloc(*numberSmoothPrimes * sizeof(short));
-	*smoothInterval = (unsigned long *) malloc(size * sizeof(long));
-	*smoothNumbers = (unsigned short *) malloc(size * sizeof(short));
-	*smoothIntsModC = (unsigned long *) calloc(maxNumberResults, sizeof(long));
-	
-	if (*logSmoothPrimes == NULL || *smoothInterval == NULL || *smoothNumbers == NULL || *smoothIntsModC == NULL) {
-		printf("Error: memory for preSmoothness could not be allocated\n");
+	findSmoothPrimes(smoothnessBound, numberSmoothPrimes, smoothPrimes);
+	findLogSmoothPrimes(*logTable, *numberSmoothPrimes, *smoothPrimes, logSmoothPrimes);
+	if (pow(2, truncPower) >= maxSizePrimePower || truncPrime >= *numberSmoothPrimes) {
+		printf("Error: too much truncation, nothing left\n");
 		exit(-1);
 	}
-	findLogSmoothPrimes(*logTable, *numberSmoothPrimes, *smoothPrimes, *logSmoothPrimes);
-	
-	findTolerance(*numberSmoothPrimes, *smoothPrimes, *maxExponents, *logTable, *logSmoothPrimes, start, size, *smoothInterval, *smoothNumbers, *smoothIntsModC, truncation, tolerance, surplusSmooth);
+	findExponents(maxSizePrimePower, *numberSmoothPrimes, *smoothPrimes, truncPower, maxExponents, minExponents);
+	findTolerance(*numberSmoothPrimes, *smoothPrimes, *maxExponents, *logTable, *logSmoothPrimes, start, size, *smoothInterval, *smoothNumbers, *smoothIntsModC, truncPrime, tolerance, surplusSmooth);
 }
