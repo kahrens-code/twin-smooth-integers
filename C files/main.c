@@ -98,12 +98,6 @@ int main() {
 	findResidues(numberSmoothPrimes, smoothPrimes, degree, polyA, C, &numberResidues, &residues);
 	relevantSteps = findRelevantSteps(numberResidues, residues, size, C);
 	finalPre = clock();
-	////////////////////////////////////////// testing /////////////////////////////////////////////////////////////
-/*	minExponents = (unsigned short *) malloc(numberSmoothPrimes * sizeof(short));
-	for (unsigned int i=0; i<numberSmoothPrimes; i++) {
-		minExponents[i] = 1;
-	}*/
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	#ifdef COMPARE
 	//single chunk regular sieve for smoothness
 		initialSieve = clock();
@@ -194,8 +188,8 @@ free(minExponents);
 	printf("tolerance to include all smooth integers: %u\n", tolerance);
 	printf("roughly %u more smooth integers per chunk\n", surplusSmooth);
 	#ifdef COMPARE
-	printf("not truncated log sieve: tolerance: %u, surplus: %u\n", tolerance0, surplusSmooth0);
-	printf("power truncated log siev: tolerance: %u, surplus: %u\n", tolerancePower, surplusSmoothPower);
+		printf("not truncated log sieve: tolerance: %u, surplus: %u\n", tolerance0, surplusSmooth0);
+		printf("power truncated log siev: tolerance: %u, surplus: %u\n", tolerancePower, surplusSmoothPower);
 	#endif
 	printf("parameters:\n");
 	printf("sBound: %.2f, start: %.2f, end: %.2f, size: %.2f\n", log2(smoothnessBound), log2(start), log2(end), log2(size));
