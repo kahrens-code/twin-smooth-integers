@@ -1,11 +1,5 @@
 #include"new.h"
 
-//open:
-//long vs unsigned long
-//check typecast
-//replace pointers in CRTTupel
-//mod with negative
-
 //compare function for sorting
 int cmpfnc (const void *a, const void *b) {
 	return ((*(unsigned int *)a > *(unsigned int *)b)-(*(unsigned int *)a < *(unsigned int *)b));
