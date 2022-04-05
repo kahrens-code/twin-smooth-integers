@@ -26,7 +26,7 @@ void findSmoothPrimes (unsigned int smoothnessBound, unsigned int *numberSmoothP
                 exit(-1);
         }
 	j = 0;
-	for (i=1; i<smoothnessBound; i++) { //transfer it to a shorter list
+	for (i=1; i<smoothnessBound; i++) {		//transfer it to a shorter list
 		if (allNumbers[i] == 0){
 			(*smoothPrimes)[j]=i+1;
 			j++;
@@ -140,7 +140,7 @@ void findSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPri
 		q = 1;
 		for (e=1; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			step = q - (start % q);
 			if (step == q) {
 				step = 0;
 			}
@@ -180,7 +180,7 @@ void findPrimeTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned i
 		q = 1;
 		for (e=1; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			step = q - (start % q);
 			if (step == q) {
 				step = 0;
 			}
@@ -236,7 +236,7 @@ void findPowerTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned i
 		q = 1;
 		for (e=minExponents[i]; e<=maxExponents[i]; e++) {
 			q *= smoothPrimes[i];
-			step = q - (start % q);		// MOD %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+			step = q - (start % q);
 			if (step == q) {
 				step = 0;
 			}
@@ -247,7 +247,7 @@ void findPowerTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned i
 		}
 	}
 	step = round(log2(start));
-	for (i=0; i<size; i++) {	//find rounded log2 of l=start+i
+	for (i=0; i<size; i++) {		//find rounded log2 of l=start+i
 		if (start + i > logTable[step]) {
 			step++;
 			if (step == 64) {
