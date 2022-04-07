@@ -2,12 +2,12 @@
 
 //declare available examples
 PTEsolution n6ex1, n6ex2, n6ex3, n6ex4, n6ex5;	//examples with degree n=6
-//PTEsolution n7ex1;							//example with degree n=7
-PTEsolution n8ex1;								//example with degree n=8
+//PTEsolution n7ex1;					//example with degree n=7
+PTEsolution n8ex1;					//example with degree n=8
 
 //set all parameters accordingly to the chosen example PTE solution
 //option for startParameter:
-//0: 						start stays unchanged
+//0: 				start stays unchanged
 //1, ..., PTE.numerPrimes:	set start to corresponding value
 void setParameters (PTEsolution *PTE, unsigned short *degree, unsigned short *numberRoots, short **roots, short **polyA, short **polyB, unsigned int *C, unsigned long *start, unsigned short startParameter, unsigned int totalSize, unsigned long *end) {
 
