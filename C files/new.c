@@ -58,7 +58,7 @@ void findResidues (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, 
 	unsigned int j = C;
 
 //factorise C	
-	unsigned int factors[(unsigned int)ceil(log(C))];		//use calloc if C becomes too big
+	unsigned int factors[(unsigned int)ceil(log(C))];	//use calloc if C becomes too big
 	unsigned int numberFactors = 0;
 	unsigned short newFactor = 0;
 
@@ -101,11 +101,11 @@ void findResidues (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, 
 	unsigned int r = 0;
 
 	*numberResidues = 1;
-	for (i=0; i<numberFactors; i++) {		//find solutions for a(x) = 0 modulo prime power factors of C
+	for (i=0; i<numberFactors; i++) {	//find solutions for a(x) = 0 modulo prime power factors of C
 		for (j=0; j<factors[i]; j++) {
 			eval = 1;
 			for (k=0; k<degree; k++) {
-				eval = (eval * ((long)j - poly[k])) % (long)factors[i];		//use % to prevent overflow
+				eval = (eval * ((long)j - poly[k])) % (long)factors[i];	//use % to prevent overflow
 			}
 			if (eval == 0) {
 				primeResidues[r] = j;
@@ -153,7 +153,7 @@ void checkMod (unsigned short *smoothNumbers, unsigned int numberResidues, unsig
 
 	for (i=0; i<numberResidues; i++) {
 		j = (long)residues[i] - startModC;	//find smalles representative in interval
-		while (j < maxRoot) {				//prevent pointer out of array
+		while (j < maxRoot) {			//prevent pointer out of array
 			j += C;
 		}
 		while (j < size) {
@@ -224,7 +224,7 @@ void checkMOD (unsigned short *smoothNumbers, unsigned int numberResidues, unsig
 	unsigned int searchPivot = floor((double)numberResidues / 2);
 	unsigned int lastResidue;
 
-	while (searchR-searchL > 0) {					//find smallest representative of R in chunk
+	while (searchR-searchL > 0) {		//find smallest representative of R in chunk
 		if (startModC > residues[searchPivot]) {
 			searchL = searchPivot+1;
 		}else{
@@ -233,8 +233,8 @@ void checkMOD (unsigned short *smoothNumbers, unsigned int numberResidues, unsig
 		searchPivot = floor((double)(searchL + searchR) / 2);
 	}
 	lastResidue = searchPivot + relevantSteps;
-	if (lastResidue > numberResidues) {							//handle wrap-around
-		for (i=0; i<(lastResidue%numberResidues); i++) {		//check if representatives are smooth
+	if (lastResidue > numberResidues) {				//handle wrap-around
+		for (i=0; i<(lastResidue%numberResidues); i++) {	//check if representatives are smooth
 			j = residues[i] - startModC + C;
 			if (j < size && maxRoot <= j) {
 				if (smoothNumbers[j] == 1) {
@@ -261,7 +261,7 @@ void checkMOD (unsigned short *smoothNumbers, unsigned int numberResidues, unsig
 	if (numberResidues < lastResidue) {
 		lastResidue = numberResidues;
 	}
-	for (i=searchPivot; i<lastResidue; i++) {		//check if representatives are smooth
+	for (i=searchPivot; i<lastResidue; i++) {	//check if representatives are smooth
 		j = residues[i] - startModC;
 		if (j < size && maxRoot <= j) {
 			if (smoothNumbers[j] == 1) {
