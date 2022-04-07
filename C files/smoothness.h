@@ -9,10 +9,10 @@
 void preSmoothness (unsigned int smoothnessBound, unsigned int *numberSmoothPrimes, unsigned int **smoothPrimes, unsigned long relevantSteps, unsigned short **maxExponents, unsigned short numberRoots, short *roots, unsigned short *maxRoot, unsigned long **logTable, unsigned short **logSmoothPrimes, unsigned long start, unsigned int size, unsigned long **smoothInterval, unsigned short **smoothNumbers, unsigned short maxNumberResults, unsigned long **smoothIntsModC, unsigned short truncPrime, unsigned short truncPower, unsigned short **minExponents, unsigned short *tolerance, unsigned int *surplusSmooth);
 
 //included in preSmoothness, only needed for comparing
-void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned long *smoothIntsModC, unsigned short truncation, unsigned short *tolerance, unsigned int *surplusSmooth);
+void findTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned short truncation, unsigned short *tolerance, unsigned int *surplusSmooth);
 
 //only needed for comparing with power truncated log sieve
-void findPowerTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned long *smoothIntsModC, unsigned short *minExponents, unsigned short *tolerance, unsigned int *surplusSmooth);
+void findPowerTolerance (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned long *logTable, unsigned short *logSmoothPrimes, unsigned long start, unsigned int size, unsigned long *smoothInterval, unsigned short *smoothNumbers, unsigned short *minExponents, unsigned short *tolerance, unsigned int *surplusSmooth);
 
 //regular sieve
 //CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
