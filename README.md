@@ -10,20 +10,19 @@ To search for twin smooth integers (i.e. n + 1 and n - 1 are smooth) one can def
 Naive approach:
 
     For every element l in I:
-
         if a(l) and b(l) are smooth:
-
             if a(l) / C and b(l) / C are integers:
-            
                 print l
 
 The tree approach by Costello, Meyer and Naehrig combined many PTE solutions and used common factors of the polynomials.
 
 Optimised approach (for single solutions):
+
     For every element l in I:
         if a(l) / C and b(l) / C are integers:
             if a(l) and b(l) are smooth:
                 print l
+                
 This decreases the number of look-ups for smoothness and allows to do a large part of the "modulo C" calculations in a pre-computation, that can be used for all search intervals.
 
 There is a Sage implementation for explanatory reasons and two C implementations with maximal variable sizes of 64 and 128 bit respectively. For explanation of the individual steps please see the commentary in the code.
