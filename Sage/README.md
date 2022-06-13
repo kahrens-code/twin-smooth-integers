@@ -4,7 +4,7 @@ The different files contain Sage code for parts of the computation and don't run
 
 PTE Solutions defines different solutions that were used for the benchmarks.
 
-Sieve of Eratosthenes defines the functions that are used to check if the elements in the search interval are smooth (1) or not (0).
+Sieve of Eratosthenes defines the functions that are used to mark the elements in the search interval as smooth (1) or not (0).
 
 Naive and Opptinised Approach contain all the functions needed for the corresponding algorithm.
 
