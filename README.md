@@ -5,7 +5,7 @@ Optimised for single solutions by doing the modulo computation first.
 
 Ideal PTE solutions provide polynomials a(x) and b(x) such that |a(x) - b(x)| = C is an interger.
 
-To search for twin smooth primes (i.e. p + 1 and p - 1 are smooth) one can define a search interval I and use one of the following approaches.
+To search for twin smooth integers (i.e. n + 1 and n - 1 are smooth) one can define a search interval I and use one of the following approaches.
 
 Naive approach:
     For every element l in I:
