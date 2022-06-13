@@ -7,12 +7,12 @@ Ideal PTE solutions provide polynomials a(x) and b(x) such that |a(x) - b(x)| = 
 
 To search for twin smooth integers (i.e. n + 1 and n - 1 are smooth) one can define a search interval I and use one of the following approaches.
 
-Naive approach:
+`Naive approach:
     For every element l in I:
         if a(l) and b(l) are smooth:
             if a(l) / C and b(l) / C are integers:
                 print l
-
+`
 The tree approach by Costello, Meyer and Naehrig combined many PTE solutions and used common factors of the polynomials.
 
 Optimised approach (for single solutions):
