@@ -2,7 +2,7 @@
 
 //declare available examples
 PTEsolution n6ex1, n6ex2, n6ex3, n6ex4, n6ex5;	//examples with degree n=6
-PTEsolution n7ex1, n7ex2, n7ex3, n7ex4, n7ex5, n7ex6, n7ex7, n7ex8, n7ex9, n7ex10;	//example with degree n=7
+PTEsolution n7ex1, n7ex2, n7ex3, n7ex4, n7ex5, n7ex6, n7ex7, n7ex8, n7ex9, n7ex10;	//examples with degree n=7
 PTEsolution n8ex1;								//example with degree n=8
 
 //set all parameters accordingly to the chosen example PTE solution
