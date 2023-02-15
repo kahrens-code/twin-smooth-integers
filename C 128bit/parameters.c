@@ -168,7 +168,7 @@ void setParameters (PTEsolution *PTE, unsigned short *degree, unsigned short *nu
 	//static unsigned long startPrimes77[] = {};
 	//n7ex7.startPrimes = startPrimes77;
 	
-	n7ex8.degree = 7;	//parametric solution from ??? for -3
+	n7ex8.degree = 7;	//parametric solution from http://doi.org/10.2307/2301481 for -3
 	n7ex8.numberRoots = 14;
 	static short roots78[14] = {0, 19, 53, 116, 148, 245, 291, 397, 443, 540, 572, 635, 669, 688};
 	n7ex8.roots = roots78;
