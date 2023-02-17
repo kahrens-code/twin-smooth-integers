@@ -26,5 +26,6 @@ Optimised approach (for single solutions):
 This decreases the number of look-ups for smoothness and allows to do a large part of the "modulo C" calculations in a pre-computation, that can be used for all search intervals.
 
 There is a Sage implementation for explanatory reasons and two C implementations with maximal variable sizes of 64 and 128 bit respectively. For explanation of the individual steps please see the commentary in the code.
+The list of used and/or referenced PTE solutions can be found in the parameters.c file for the 128 bit C implementation.
 
 More details and references can be found in the paper ***comming soon***.
