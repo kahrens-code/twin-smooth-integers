@@ -120,7 +120,7 @@ void findLogSmoothPrimes (unsigned __int128 *logTable, unsigned int numberSmooth
 }
 
 //regular sieve
-//CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
+//CAUTION: intervals with elements beyond 2^128 cause overflow and have to be tackled differently
 //CAUTION: just returns an array of 0s and 1s, start value is NOT included
 void findSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned __int128 start, unsigned int size, unsigned __int128 *interval, unsigned short *smoothNumbers) {
 	
@@ -160,7 +160,7 @@ void findSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPri
 }
 
 //truncated log sieve
-//CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
+//CAUTION: intervals with elements beyond 2^128 cause overflow and have to be tackled differently
 //CAUTION: just returns an array of 0s and 1s, start value is NOT included
 void findPrimeTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned __int128 *logTable, unsigned __int128 start, unsigned int size, unsigned short *smoothNumbers, unsigned short truncPrime, unsigned short tolerance) {
 
@@ -216,7 +216,7 @@ void findPrimeTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned i
 }
 
 //power truncated log sieve
-//CAUTION: intervals with elements beyond 2^64 cause overflow and have to be tackled differently
+//CAUTION: intervals with elements beyond 2^128 cause overflow and have to be tackled differently
 //CAUTION: just returns an array of 0s and 1s, start value is NOT included
 void findPowerTruncLogSmoothNumbers (unsigned int numberSmoothPrimes, unsigned int *smoothPrimes, unsigned short *maxExponents, unsigned short *logSmoothPrimes, unsigned __int128 *logTable, unsigned __int128 start, unsigned int size, unsigned short *smoothNumbers, unsigned short *minExponents, unsigned short tolerance) {
 
