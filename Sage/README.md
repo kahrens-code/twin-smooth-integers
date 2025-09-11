@@ -9,4 +9,3 @@ Sieve of Eratosthenes defines the functions that are used to mark the elements i
 Naive and Opptinised Approach contain all the functions needed for the corresponding algorithm.
 
 Example shows a possible way to combine the other functions to a working algorithm to search for twin smooth integers.
-(Sieve of Eratosthenes, Naive Approach, Opptinised Approach should be included in front of Example to provide the needed functions.)

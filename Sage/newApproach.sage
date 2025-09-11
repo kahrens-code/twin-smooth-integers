@@ -1,4 +1,4 @@
-#Optimised appraoch to find twin smooth primes using a single PTE solution
+#New approach to find twin smooth primes using a single PTE solution
 
 
 #find those residue classes [r] such that a(r+k*C)/C and b(r+k*C)/C are integers
